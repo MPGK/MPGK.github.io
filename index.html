@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WE <3 PONCHO</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body, button, footer p {
+  font-family: 'Roboto', sans-serif;
+}
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+  background-image: url('background.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+    }
+    #raccoon-gif {
+      width: 300px;
+      height: 300px;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+    button {
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      transition-duration: 0.4s;
+      background-color: #4CAF50;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    }
+    button:hover {
+      background-color: #A7A783;
+      color: white;
+    }
+    footer {
+  border: 2px solid white;
+Background-color: #A7A783;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+      margin-top: 50px;
+    }
+footer p {
+  font-size: 20px;
+  color: white;
+}
+  </style>
+</head>
+<body>
+  <img id="title-image" src="title.png">
+  <img id="raccoon-gif" src="Idle.gif">
+  <div class="button-container">
+    <button onclick="playSound('Joy')">Joy</button>
+    <button onclick="playSound('Hurt')">Hurt</button>
+    <button onclick="playSound('Yes')">Yes</button>
+    <button onclick="playSound('No')">No</button>
+    <button onclick="playSound('Battle Cry')">Battle Cry</button>
+    <button onclick="playSound('Death')">Death</button>
+    <button onclick="playSound('Ponder')">Ponder</button>
+    <button onclick="playSound('Sad')">Sad</button>
+  </div>
+  <footer>
+    <p>Buy <a href="https://store.steampowered.com/app/691790/Arcadian_Atlas/" target="_blank">Arcadian Atlas on Steam!</a></p>
+    <p>Get the soundtrack on <a href="https://moritzpgkatz.bandcamp.com/album/arcadian-atlas-original-soundtrack" target="_blank">Bandcamp!</a></p>
+  </footer>
+
+  <script>
+    var soundPool = {
+      Joy: { sounds: ["Joy1.ogg", "Joy2.ogg", "Joy3.ogg"], animation: "Joy.gif", duration: 600 },
+      Hurt: { sounds: ["Hurt1.ogg", "Hurt2.ogg", "Hurt3.ogg"], animation: "Hurt.gif", duration: 800 },
+      Yes: { sounds: ["Yes1.ogg", "Yes2.ogg", "Yes3.ogg"], animation: "Yes.gif", duration: 800 },
+      No: { sounds: ["No1.ogg", "No2.ogg", "No3.ogg"], animation: "No.gif", duration: 800 },
+      "Battle Cry": { sounds: ["BattleCry1.ogg", "BattleCry2.ogg", "BattleCry3.ogg"], animation: "BattleCry.gif", duration: 800 },
+      Death: { sounds: ["Death1.ogg", "Death2.ogg", "Death3.ogg"], animation: "Death.gif", duration: 800 },
+      Ponder: { sounds: ["Ponder1.ogg", "Ponder2.ogg", "Ponder3.ogg"], animation: "Ponder.gif", duration: 800 },
+      Sad: { sounds: ["Sad1.ogg", "Sad2.ogg", "Sad3.ogg"], animation: "Sad.gif", duration: 800 },
+    };
+
+    var currentHowl = null;
+    var currentTimeout = null;
+
+    var backgroundMusic = null;
+    var backgroundMusicPlayed = false;
+
+    function playBackgroundMusic() {
+      if (!backgroundMusicPlayed) {
+        backgroundMusic = new Howl({
+          src: ['ponchotheme.ogg'],
+          autoplay: true,
+          loop: true,
+          volume: 0.5,
+        });
+        backgroundMusicPlayed = true;
+      }
+    }
+
+    function playSound(sound) {
+      playBackgroundMusic();
+
+      if (currentHowl) {
+        currentHowl.stop();
+      }
+
+      if (currentTimeout) {
+        clearTimeout(currentTimeout);
+      }
+
+      var sounds = soundPool[sound].sounds;
+      var animationFile = soundPool[sound].animation;
+      var duration = soundPool[sound].duration;
+
+      var currentIndex = Math.floor(Math.random() * sounds.length);
+      var soundFile = sounds[currentIndex];
+
+      var raccoonGif = document.getElementById("raccoon-gif");
+      raccoonGif.src = animationFile;
+
+      currentTimeout = setTimeout(function() {
+        raccoonGif.src = "Idle.gif";
+      }, duration);
+
+      var howl = new Howl({
+        src: [soundFile],
+        autoplay: true,
+        loop: false,
+        volume: 1,
+      });
+
+      currentHowl = howl;
+    }
+  </script>
+</body>
+</html>

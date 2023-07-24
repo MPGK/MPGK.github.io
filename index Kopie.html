@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>I <3 PONCHO</title>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+  <script src="https://cdn.plyr.io/3.6.8/plyr.js"></script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      background-color: #B06519;
+    }
+    .video-container {
+      width: 300px;
+      height: 300px;
+    }
+    #raccoon-video {
+      width: 100%;
+      height: 100%;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+    button {
+      margin: 5px;
+    }
+    footer {
+      margin-top: 50px;
+    }
+    .plyr__video-wrapper {
+      pointer-events: none;
+    }
+    .plyr--hide-controls .plyr__controls {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="video-container">
+    <video id="raccoon-video" playsinline></video>
+  </div>
+  <div class="button-container">
+    <button onclick="playSound('Joy')">Joy</button>
+    <button onclick="playSound('Hurt')">Hurt</button>
+    <button onclick="playSound('Yes')">Yes</button>
+    <button onclick="playSound('No')">No</button>
+    <button onclick="playSound('Battle Cry')">Battle Cry</button>
+    <button onclick="playSound('Death')">Death</button>
+    <button onclick="playSound('Ponder')">Ponder</button>
+    <button onclick="playSound('Sad')">Sad</button>
+  </div>
+  <footer>
+    <p>Poncho Rules! Now go play some <a href="https://store.steampowered.com/app/691790/Arcadian_Atlas/" target="_blank">Arcadian Atlas</a>!!</p>
+  </footer>
+
+  <script>
+    var soundPool = {
+      Joy: { sounds: ["Joy1.ogg", "Joy2.ogg", "Joy3.ogg"], animation: "Joy.webm" },
+      Hurt: { sounds: ["Hurt1.ogg", "Hurt2.ogg", "Hurt3.ogg"], animation: "Hurt.webm" },
+      Yes: { sounds: ["Yes1.ogg", "Yes2.ogg", "Yes3.ogg"], animation: "Yes.webm" },
+      No: { sounds: ["No1.ogg", "No2.ogg", "No3.ogg"], animation: "No.webm" },
+      "Battle Cry": { sounds: ["BattleCry1.ogg", "BattleCry2.ogg", "BattleCry3.ogg"], animation: "BattleCry.webm" },
+      Death: { sounds: ["Death1.ogg", "Death2.ogg", "Death3.ogg"], animation: "Death.webm" },
+      Ponder: { sounds: ["Ponder1.ogg", "Ponder2.ogg", "Ponder3.ogg"], animation: "Ponder.webm" },
+      Sad: { sounds: ["Sad1.ogg", "Sad2.ogg", "Sad3.ogg"], animation: "Sad.webm" },
+    };
+
+    var currentHowl = null;
+
+    var player = new Plyr('#raccoon-video', {
+      controls: [],
+      autoplay: true,
+      loop: { active: false },
+      muted: true,
+    });
+
+    player.source = {
+      type: 'video',
+      sources: [{
+        src: 'Idle.webm',
+        type: 'video/webm',
+      }],
+    };
+
+    player.play();
+
+    var backgroundMusic = null;
+    var backgroundMusicPlayed = false;
+
+    function playBackgroundMusic() {
+      if (!backgroundMusicPlayed) {
+        backgroundMusic = new Howl({
+          src: ['ponchotheme.ogg'],
+          autoplay: true,
+          loop: true,
+          volume: 0.5,
+        });
+        backgroundMusicPlayed = true;
+      }
+    }
+
+    function playSound(sound) {
+      playBackgroundMusic();
+
+      if (currentHowl) {
+        currentHowl.stop();
+      }
+
+      var sounds = soundPool[sound].sounds;
+      var animationFile = soundPool[sound].animation;
+
+      var currentIndex = Math.floor(Math.random() * sounds.length);
+      var soundFile = sounds[currentIndex];
+
+      player.source = {
+        type: 'video',
+        sources: [{
+          src: animationFile,
+          type: 'video/webm',
+        }],
+      };
+
+      player.play();
+
+      player.once('ended', function() {
+        player.source = {
+          type: 'video',
+          sources: [{
+            src: 'Idle.webm',
+            type: 'video/webm',
+          }],
+        };
+        player.play();
+      });
+
+      var howl = new Howl({
+        src: [soundFile],
+        autoplay: true,
+        loop: false,
+        volume: 1,
+      });
+
+      currentHowl = howl;
+    }
+  </script>
+</body>
+</html>
